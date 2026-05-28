@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phish Shield AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-container">
+        <div class="logo-shield">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <span class="logo-text">PHISH SHIELD <span class="accent-text">AI</span></span>
+      </div>
+      <div class="api-status">
+        <span id="api-status-dot" class="status-dot offline"></span>
+        <span id="api-status-text" class="status-text">Connecting...</span>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-current">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="9" y1="9" x2="21" y2="9"/></svg>
+        <span>Active Tab</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-url">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        <span>URL Scan</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-email">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span>Email AI</span>
+      </button>
+    </nav>
+
+    <!-- Main Content Panels -->
+    <main class="main-content">
+      <!-- 1. Active Tab Scan Panel -->
+      <section id="tab-current" class="tab-panel active">
+        <div id="current-url-display" class="url-badge">Loading current tab...</div>
+        
+        <div class="scan-meter-container">
+          <div class="meter-radial">
+            <svg class="progress-ring" width="140" height="140">
+              <circle class="progress-ring__background" stroke="rgba(255,255,255,0.06)" stroke-width="10" fill="transparent" r="58" cx="70" cy="70"/>
+              <circle id="current-score-circle" class="progress-ring__circle" stroke="#28a745" stroke-dasharray="364.42" stroke-dashoffset="364.42" stroke-width="10" fill="transparent" r="58" cx="70" cy="70"/>
+            </svg>
+            <div class="meter-info">
+              <span id="current-score-percent" class="meter-value">0%</span>
+              <span class="meter-label">Threat Score</span>
+            </div>
+          </div>
+          <div id="current-risk-badge" class="risk-badge risk-safe">SAFE</div>
+        </div>
+
+        <div class="analysis-results">
+          <h3>Security Triggers Identified</h3>
+          <ul id="current-triggers-list" class="triggers-list">
+            <li>Analyzing webpage URL heuristics and server responses...</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 2. Manual URL Scan Panel -->
+      <section id="tab-url" class="tab-panel">
+        <div class="input-group">
+          <label for="manual-url-input">Enter URL to Scan</label>
+          <div class="search-box">
+            <input type="text" id="manual-url-input" placeholder="e.g. paypal-signin-update.com">
+            <button id="btn-scan-url">Scan</button>
+          </div>
+        </div>
+
+        <div id="url-scan-result" class="result-box hidden">
+          <div class="result-header">
+            <div>
+              <span class="result-domain" id="url-res-domain">domain.com</span>
+              <div class="risk-badge" id="url-res-risk-badge">SAFE</div>
+            </div>
+            <div class="small-score-box">
+              <span class="small-score-val" id="url-res-score">10%</span>
+              <span class="small-score-lbl">Threat Score</span>
+            </div>
+          </div>
+
+          <div class="analysis-results">
+            <h3>Detections & Analysis</h3>
+            <ul id="url-res-triggers" class="triggers-list">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Manual Email Scan Panel -->
+      <section id="tab-email" class="tab-panel">
+        <div class="input-group">
+          <label for="email-text-input">Paste Email Body Content</label>
+          <textarea id="email-text-input" placeholder="Paste the text of the email here to analyze it using NLP and Machine Learning for urgency and phishing patterns..."></textarea>
+          <button id="btn-scan-email" class="btn-primary">Analyze Email Content</button>
+        </div>
+
+        <div id="email-scan-result" class="result-box hidden">
+          <div class="result-header">
+            <div>
+              <span class="result-domain">AI Sentiment Check</span>
+              <div class="risk-badge" id="email-res-risk-badge">SAFE</div>
+            </div>
+            <div class="small-score-box">
+              <span class="small-score-val" id="email-res-score">10%</span>
+              <span class="small-score-lbl">Threat Score</span>
+            </div>
+          </div>
+
+          <div class="analysis-results">
+            <h3>Text Patterns Flagged</h3>
+            <ul id="email-res-triggers" class="triggers-list">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>AI-Powered Cybershield Platform v1.0.0</span>
+      <button id="btn-toggle-scan" class="toggle-scan-btn">Protection: ON</button>
+    </footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
